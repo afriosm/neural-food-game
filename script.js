@@ -188,6 +188,11 @@ class NeuralFoodNetwork {
         const container = document.getElementById('active-characteristics');
         container.innerHTML = '';
         
+        if (this.activeNeurons.length === 0) {
+            container.innerHTML = '<p class="text-muted">Haz clic en "Siguiente Época" para activar neuronas</p>';
+            return;
+        }
+        
         this.activeNeurons.forEach((neuron, index) => {
             const div = document.createElement('div');
             div.className = 'characteristic-dropdown';
@@ -199,6 +204,7 @@ class NeuralFoodNetwork {
             
             const select = document.createElement('select');
             select.className = 'form-select form-select-sm';
+            select.id = `neuron-select-${index}`;
             
             // Crear opciones
             this.characteristics[neuron.characteristic].forEach(val => {
@@ -211,9 +217,11 @@ class NeuralFoodNetwork {
                 select.appendChild(option);
             });
             
-            // Event listener robusto
-            select.addEventListener('change', (e) => {
-                this.updateNeuronValue(index, e.target.value);
+            // Event listener con bind para mantener el contexto
+            const gameInstance = this;
+            select.addEventListener('change', function(e) {
+                console.log('Dropdown changed:', index, e.target.value);
+                gameInstance.updateNeuronValue(index, e.target.value);
             });
             
             const small = document.createElement('small');
@@ -225,18 +233,32 @@ class NeuralFoodNetwork {
             div.appendChild(small);
             container.appendChild(div);
         });
+        
+        console.log('Active neurons updated:', this.activeNeurons);
     }
 
     updateNeuronValue(neuronIndex, newValue) {
-        this.activeNeurons[neuronIndex].value = newValue;
+        console.log('Updating neuron value:', neuronIndex, newValue);
         
-        // Actualizar tooltip
-        const neuron = this.activeNeurons[neuronIndex];
-        const neuronElement = document.getElementById(`neuron-${neuron.layer}-${neuron.neuron}`);
-        neuronElement.querySelector('.neuron-tooltip').textContent = `${neuron.characteristic}: ${newValue}`;
-        
-        this.updateCostFunction();
-        this.updateFilteredFoods();
+        if (neuronIndex >= 0 && neuronIndex < this.activeNeurons.length) {
+            this.activeNeurons[neuronIndex].value = newValue;
+            
+            // Actualizar tooltip
+            const neuron = this.activeNeurons[neuronIndex];
+            const neuronElement = document.getElementById(`neuron-${neuron.layer}-${neuron.neuron}`);
+            if (neuronElement) {
+                const tooltip = neuronElement.querySelector('.neuron-tooltip');
+                if (tooltip) {
+                    tooltip.textContent = `${neuron.characteristic}: ${newValue}`;
+                }
+            }
+            
+            console.log('Neuron updated successfully');
+            this.updateCostFunction();
+            this.updateFilteredFoods();
+        } else {
+            console.error('Invalid neuron index:', neuronIndex);
+        }
     }
 
     getFilteredFoods() {
