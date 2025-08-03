@@ -13,7 +13,7 @@ let characteristics = {};
 function loadDataset() {
     console.log('=== CARGANDO DATASET ===');
     
-    Papa.parse('dataset_alimentos_60clases_25rasgos.csv', {
+    Papa.parse('dataset_alimentos_120clases_25rasgos.csv', {
         download: true,
         header: true,
         complete: function(results) {
