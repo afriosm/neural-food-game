@@ -159,10 +159,20 @@ function resetGame() {
     // Reiniciar todas las neuronas como inactivas
     const neurons = document.querySelectorAll('.neuron');
     console.log('Reiniciando neuronas:', neurons.length);
+    
+    if (neurons.length === 0) {
+        console.error('¡NO SE ENCONTRARON NEURONAS!');
+        return;
+    }
+    
     neurons.forEach((neuron, index) => {
+        console.log(`Neurona ${index + 1} - Clases antes:`, neuron.className);
+        
         // Remover todas las clases de estado y agregar inactive
         neuron.className = neuron.className.replace('active', '').replace('inactive', '');
         neuron.classList.add('inactive');
+        
+        console.log(`Neurona ${index + 1} - Clases después:`, neuron.className);
         
         const tooltip = neuron.querySelector('.neuron-tooltip');
         if (tooltip) tooltip.textContent = 'Inactiva';
@@ -173,6 +183,13 @@ function resetGame() {
     // Verificar que se reiniciaron correctamente
     const inactiveNeurons = document.querySelectorAll('.neuron.inactive');
     console.log('Neuronas inactivas después del reset:', inactiveNeurons.length);
+    
+    // Verificar todas las neuronas
+    const allNeurons = document.querySelectorAll('.neuron');
+    console.log('Total de neuronas después del reset:', allNeurons.length);
+    allNeurons.forEach((neuron, index) => {
+        console.log(`Neurona ${index + 1} final:`, neuron.className);
+    });
     
     updateCostFunction();
     console.log('Alimento objetivo:', targetFood.clase);
