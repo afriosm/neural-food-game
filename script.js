@@ -86,6 +86,11 @@ function createNeuralNetwork() {
         
         networkContainer.appendChild(layerDiv);
     }
+    
+    // Verificar que las neuronas se crearon correctamente
+    const neurons = document.querySelectorAll('.neuron');
+    console.log('Neuronas creadas:', neurons.length);
+    console.log('Neuronas inactivas:', document.querySelectorAll('.neuron.inactive').length);
     console.log('=== RED NEURONAL CREADA ===');
 }
 
