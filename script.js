@@ -6,49 +6,90 @@ let currentEpoch = 0;
 let activeNeurons = [];
 let targetFood = null;
 let gameActive = false;
+let dataset = [];
+let characteristics = {};
 
-// Características disponibles
-const characteristics = {
-    'Color dominante': ['Naranja', 'Morado', 'Amarillo', 'Verde', 'Rojo', 'Blanco', 'Café'],
-    'Forma': ['Ovalado', 'Alargado', 'Redondo', 'Irregular', 'Plano'],
-    'Piel/cáscara': ['Gruesa', 'Fina', 'Sin piel'],
-    'Semillas/hueso': ['Muchas pequeñas', 'Sin', 'Pequeñas', 'Hueso', 'Semilla'],
-    'Jugosidad': ['Media', 'Alta', 'Baja'],
-    'Sabor dominante': ['Dulce', 'Ácido', 'Umami', 'Salado'],
-    'Dulzor': ['Alto', 'Medio', 'Bajo'],
-    'Acidez': ['Alta', 'Media', 'Baja'],
-    'Textura': ['Harinoso', 'Fibroso', 'Jugoso', 'Cremoso', 'Crujiente'],
-    'Aroma': ['Alto', 'Medio', 'Bajo'],
-    'Preparación típica': ['Crudo', 'Cocido', 'Ambos'],
-    'Consumo habitual': ['Solo', 'En mezcla', 'Acompañante'],
-    'Plato frecuente': ['Ensalada', 'Snack', 'Jugo', 'Postre', 'Sopa', 'Principal'],
-    'Temperatura de consumo': ['Frío', 'Ambiente', 'Caliente'],
-    'Parte comestible': ['Pulpa', 'Tallo', 'Hoja', 'Grano', 'Raíz', 'Semilla', 'Líquido'],
-    'Conservación': ['Ambiente', 'Refrigerar'],
-    'Vida útil': ['Corta', 'Media', 'Larga'],
-    'Estacionalidad': ['Estacional', 'Todo el año'],
-    'Sensibilidad al golpe': ['Alta', 'Media', 'Baja'],
-    'Facilidad de limpieza/pelado': ['Alta', 'Media'],
-    'Contenido de agua': ['Alto', 'Medio', 'Bajo'],
-    'Fibra': ['Alta', 'Media', 'Baja'],
-    'Grasas': ['Altas', 'Medias', 'Bajas'],
-    'Procesamiento': ['Mínimo', 'Medio', 'Alto'],
-    'Piel comestible': ['Sí', 'No']
-};
+// Función para cargar el dataset desde CSV
+function loadDataset() {
+    console.log('=== CARGANDO DATASET ===');
+    
+    Papa.parse('dataset_alimentos_60clases_25rasgos.csv', {
+        download: true,
+        header: true,
+        complete: function(results) {
+            console.log('CSV cargado:', results.data.length, 'filas');
+            dataset = results.data.filter(row => row.Clase && row.Clase.trim() !== '');
+            console.log('Dataset filtrado:', dataset.length, 'alimentos');
+            
+            // Extraer características únicas
+            const headers = Object.keys(dataset[0]).filter(key => key !== 'Clase');
+            headers.forEach(header => {
+                const values = [...new Set(dataset.map(row => row[header]))].filter(val => val && val.trim() !== '');
+                characteristics[header] = values;
+            });
+            
+            console.log('Características extraídas:', Object.keys(characteristics).length);
+            console.log('Dataset cargado correctamente');
+            
+            // Inicializar el juego después de cargar los datos
+            initializeGame();
+        },
+        error: function(error) {
+            console.error('Error cargando CSV:', error);
+            // Fallback a dataset simplificado
+            loadFallbackDataset();
+        }
+    });
+}
 
-// Dataset simplificado
-const dataset = [
-    {clase: 'Mango', 'Color dominante': 'Naranja', Forma: 'Ovalado', 'Piel/cáscara': 'Gruesa', 'Semillas/hueso': 'Muchas pequeñas', Jugosidad: 'Media', 'Sabor dominante': 'Dulce', Dulzor: 'Alto', Acidez: 'Alta', Textura: 'Harinoso', Aroma: 'Alto', 'Preparación típica': 'Crudo', 'Consumo habitual': 'En mezcla', 'Plato frecuente': 'Ensalada', 'Temperatura de consumo': 'Frío', 'Parte comestible': 'Pulpa', Conservación: 'Ambiente', 'Vida útil': 'Corta', Estacionalidad: 'Estacional', 'Sensibilidad al golpe': 'Alta', 'Facilidad de limpieza/pelado': 'Alta', 'Contenido de agua': 'Alto', Fibra: 'Alta', Grasas: 'Bajas', Procesamiento: 'Mínimo', 'Piel comestible': 'No'},
-    {clase: 'Papaya', 'Color dominante': 'Morado', Forma: 'Ovalado', 'Piel/cáscara': 'Gruesa', 'Semillas/hueso': 'Sin', Jugosidad: 'Media', 'Sabor dominante': 'Dulce', Dulzor: 'Alto', Acidez: 'Media', Textura: 'Fibroso', Aroma: 'Alto', 'Preparación típica': 'Crudo', 'Consumo habitual': 'Solo', 'Plato frecuente': 'Snack', 'Temperatura de consumo': 'Ambiente', 'Parte comestible': 'Pulpa', Conservación: 'Refrigerar', 'Vida útil': 'Corta', Estacionalidad: 'Estacional', 'Sensibilidad al golpe': 'Media', 'Facilidad de limpieza/pelado': 'Media', 'Contenido de agua': 'Alto', Fibra: 'Alta', Grasas: 'Bajas', Procesamiento: 'Mínimo', 'Piel comestible': 'No'},
-    {clase: 'Piña', 'Color dominante': 'Amarillo', Forma: 'Alargado', 'Piel/cáscara': 'Gruesa', 'Semillas/hueso': 'Hueso', Jugosidad: 'Media', 'Sabor dominante': 'Ácido', Dulzor: 'Alto', Acidez: 'Alta', Textura: 'Harinoso', Aroma: 'Alto', 'Preparación típica': 'Crudo', 'Consumo habitual': 'Solo', 'Plato frecuente': 'Ensalada', 'Temperatura de consumo': 'Frío', 'Parte comestible': 'Pulpa', Conservación: 'Refrigerar', 'Vida útil': 'Corta', Estacionalidad: 'Todo el año', 'Sensibilidad al golpe': 'Media', 'Facilidad de limpieza/pelado': 'Alta', 'Contenido de agua': 'Alto', Fibra: 'Media', Grasas: 'Bajas', Procesamiento: 'Mínimo', 'Piel comestible': 'No'},
-    {clase: 'Banano', 'Color dominante': 'Amarillo', Forma: 'Ovalado', 'Piel/cáscara': 'Gruesa', 'Semillas/hueso': 'Pequeñas', Jugosidad: 'Media', 'Sabor dominante': 'Dulce', Dulzor: 'Alto', Acidez: 'Alta', Textura: 'Harinoso', Aroma: 'Medio', 'Preparación típica': 'Crudo', 'Consumo habitual': 'Solo', 'Plato frecuente': 'Jugo', 'Temperatura de consumo': 'Ambiente', 'Parte comestible': 'Pulpa', Conservación: 'Ambiente', 'Vida útil': 'Corta', Estacionalidad: 'Todo el año', 'Sensibilidad al golpe': 'Media', 'Facilidad de limpieza/pelado': 'Media', 'Contenido de agua': 'Alto', Fibra: 'Media', Grasas: 'Bajas', Procesamiento: 'Mínimo', 'Piel comestible': 'Sí'},
-    {clase: 'Manzana', 'Color dominante': 'Verde', Forma: 'Alargado', 'Piel/cáscara': 'Gruesa', 'Semillas/hueso': 'Sin', Jugosidad: 'Media', 'Sabor dominante': 'Dulce', Dulzor: 'Medio', Acidez: 'Media', Textura: 'Harinoso', Aroma: 'Alto', 'Preparación típica': 'Crudo', 'Consumo habitual': 'En mezcla', 'Plato frecuente': 'Snack', 'Temperatura de consumo': 'Frío', 'Parte comestible': 'Pulpa', Conservación: 'Ambiente', 'Vida útil': 'Corta', Estacionalidad: 'Estacional', 'Sensibilidad al golpe': 'Alta', 'Facilidad de limpieza/pelado': 'Media', 'Contenido de agua': 'Alto', Fibra: 'Alta', Grasas: 'Bajas', Procesamiento: 'Mínimo', 'Piel comestible': 'Sí'},
-    {clase: 'Naranja', 'Color dominante': 'Rojo', Forma: 'Redondo', 'Piel/cáscara': 'Fina', 'Semillas/hueso': 'Hueso', Jugosidad: 'Alta', 'Sabor dominante': 'Dulce', Dulzor: 'Medio', Acidez: 'Baja', Textura: 'Jugoso', Aroma: 'Alto', 'Preparación típica': 'Crudo', 'Consumo habitual': 'Solo', 'Plato frecuente': 'Snack', 'Temperatura de consumo': 'Frío', 'Parte comestible': 'Pulpa', Conservación: 'Ambiente', 'Vida útil': 'Corta', Estacionalidad: 'Todo el año', 'Sensibilidad al golpe': 'Alta', 'Facilidad de limpieza/pelado': 'Media', 'Contenido de agua': 'Alto', Fibra: 'Alta', Grasas: 'Bajas', Procesamiento: 'Mínimo', 'Piel comestible': 'No'},
-    {clase: 'Papa', 'Color dominante': 'Blanco', Forma: 'Redondo', 'Piel/cáscara': 'Fina', 'Semillas/hueso': 'Sin', Jugosidad: 'Media', 'Sabor dominante': 'Umami', Dulzor: 'Medio', Acidez: 'Baja', Textura: 'Harinoso', Aroma: 'Medio', 'Preparación típica': 'Cocido', 'Consumo habitual': 'Acompañante', 'Plato frecuente': 'Sopa', 'Temperatura de consumo': 'Caliente', 'Parte comestible': 'Raíz', Conservación: 'Ambiente', 'Vida útil': 'Larga', Estacionalidad: 'Todo el año', 'Sensibilidad al golpe': 'Media', 'Facilidad de limpieza/pelado': 'Media', 'Contenido de agua': 'Bajo', Fibra: 'Alta', Grasas: 'Bajas', Procesamiento: 'Medio', 'Piel comestible': 'No'},
-    {clase: 'Arroz', 'Color dominante': 'Blanco', Forma: 'Alargado', 'Piel/cáscara': 'Fina', 'Semillas/hueso': 'Semilla', Jugosidad: 'Baja', 'Sabor dominante': 'Umami', Dulzor: 'Bajo', Acidez: 'Baja', Textura: 'Harinoso', Aroma: 'Bajo', 'Preparación típica': 'Cocido', 'Consumo habitual': 'Acompañante', 'Plato frecuente': 'Sopa', 'Temperatura de consumo': 'Caliente', 'Parte comestible': 'Raíz', Conservación: 'Ambiente', 'Vida útil': 'Larga', Estacionalidad: 'Todo el año', 'Sensibilidad al golpe': 'Baja', 'Facilidad de limpieza/pelado': 'Alta', 'Contenido de agua': 'Bajo', Fibra: 'Media', Grasas: 'Bajas', Procesamiento: 'Medio', 'Piel comestible': 'No'},
-    {clase: 'Café', 'Color dominante': 'Blanco', Forma: 'Plano', 'Piel/cáscara': 'Sin piel', 'Semillas/hueso': 'Sin', Jugosidad: 'Alta', 'Sabor dominante': 'Dulce', Dulzor: 'Alto', Acidez: 'Baja', Textura: 'Jugoso', Aroma: 'Bajo', 'Preparación típica': 'Ambos', 'Consumo habitual': 'Solo', 'Plato frecuente': 'Snack', 'Temperatura de consumo': 'Caliente', 'Parte comestible': 'Líquido', Conservación: 'Refrigerar', 'Vida útil': 'Larga', Estacionalidad: 'Todo el año', 'Sensibilidad al golpe': 'Baja', 'Facilidad de limpieza/pelado': 'Alta', 'Contenido de agua': 'Alto', Fibra: 'Baja', Grasas: 'Bajas', Procesamiento: 'Mínimo', 'Piel comestible': 'No'},
-    {clase: 'Agua', 'Color dominante': 'Verde', Forma: 'Plano', 'Piel/cáscara': 'Sin piel', 'Semillas/hueso': 'Sin', Jugosidad: 'Alta', 'Sabor dominante': 'Dulce', Dulzor: 'Medio', Acidez: 'Media', Textura: 'Cremoso', Aroma: 'Medio', 'Preparación típica': 'Ambos', 'Consumo habitual': 'Solo', 'Plato frecuente': 'Snack', 'Temperatura de consumo': 'Caliente', 'Parte comestible': 'Líquido', Conservación: 'Ambiente', 'Vida útil': 'Media', Estacionalidad: 'Todo el año', 'Sensibilidad al golpe': 'Baja', 'Facilidad de limpieza/pelado': 'Alta', 'Contenido de agua': 'Alto', Fibra: 'Baja', Grasas: 'Bajas', Procesamiento: 'Mínimo', 'Piel comestible': 'No'}
-];
+// Dataset de fallback en caso de error
+function loadFallbackDataset() {
+    console.log('Usando dataset de fallback');
+    dataset = [
+        {Clase: 'Mango', 'Color dominante': 'Naranja', Forma: 'Ovalado', 'Piel/cáscara': 'Gruesa', 'Semillas/hueso': 'Muchas pequeñas', Jugosidad: 'Media', 'Sabor dominante': 'Dulce', Dulzor: 'Alto', Acidez: 'Alta', Textura: 'Harinoso', Aroma: 'Alto', 'Preparación típica': 'Crudo', 'Consumo habitual': 'En mezcla', 'Plato frecuente': 'Ensalada', 'Temperatura de consumo': 'Frío', 'Parte comestible': 'Pulpa', Conservación: 'Ambiente', 'Vida útil': 'Corta', Estacionalidad: 'Estacional', 'Sensibilidad al golpe': 'Alta', 'Facilidad de limpieza/pelado': 'Alta', 'Contenido de agua': 'Alto', Fibra: 'Alta', Grasas: 'Bajas', Procesamiento: 'Mínimo', 'Piel comestible': 'No'},
+        {Clase: 'Papaya', 'Color dominante': 'Morado', Forma: 'Ovalado', 'Piel/cáscara': 'Gruesa', 'Semillas/hueso': 'Sin', Jugosidad: 'Media', 'Sabor dominante': 'Dulce', Dulzor: 'Alto', Acidez: 'Media', Textura: 'Fibroso', Aroma: 'Alto', 'Preparación típica': 'Crudo', 'Consumo habitual': 'Solo', 'Plato frecuente': 'Snack', 'Temperatura de consumo': 'Ambiente', 'Parte comestible': 'Pulpa', Conservación: 'Refrigerar', 'Vida útil': 'Corta', Estacionalidad: 'Estacional', 'Sensibilidad al golpe': 'Media', 'Facilidad de limpieza/pelado': 'Media', 'Contenido de agua': 'Alto', Fibra: 'Alta', Grasas: 'Bajas', Procesamiento: 'Mínimo', 'Piel comestible': 'No'},
+        {Clase: 'Piña', 'Color dominante': 'Amarillo', Forma: 'Alargado', 'Piel/cáscara': 'Gruesa', 'Semillas/hueso': 'Hueso', Jugosidad: 'Media', 'Sabor dominante': 'Ácido', Dulzor: 'Alto', Acidez: 'Alta', Textura: 'Harinoso', Aroma: 'Alto', 'Preparación típica': 'Crudo', 'Consumo habitual': 'Solo', 'Plato frecuente': 'Ensalada', 'Temperatura de consumo': 'Frío', 'Parte comestible': 'Pulpa', Conservación: 'Refrigerar', 'Vida útil': 'Corta', Estacionalidad: 'Todo el año', 'Sensibilidad al golpe': 'Media', 'Facilidad de limpieza/pelado': 'Alta', 'Contenido de agua': 'Alto', Fibra: 'Media', Grasas: 'Bajas', Procesamiento: 'Mínimo', 'Piel comestible': 'No'}
+    ];
+    
+    characteristics = {
+        'Color dominante': ['Naranja', 'Morado', 'Amarillo', 'Verde', 'Rojo', 'Blanco', 'Café'],
+        'Forma': ['Ovalado', 'Alargado', 'Redondo', 'Irregular', 'Plano'],
+        'Piel/cáscara': ['Gruesa', 'Fina', 'Sin piel'],
+        'Semillas/hueso': ['Muchas pequeñas', 'Sin', 'Pequeñas', 'Hueso', 'Semilla'],
+        'Jugosidad': ['Media', 'Alta', 'Baja'],
+        'Sabor dominante': ['Dulce', 'Ácido', 'Umami', 'Salado'],
+        'Dulzor': ['Alto', 'Medio', 'Bajo'],
+        'Acidez': ['Alta', 'Media', 'Baja'],
+        'Textura': ['Harinoso', 'Fibroso', 'Jugoso', 'Cremoso', 'Crujiente'],
+        'Aroma': ['Alto', 'Medio', 'Bajo'],
+        'Preparación típica': ['Crudo', 'Cocido', 'Ambos'],
+        'Consumo habitual': ['Solo', 'En mezcla', 'Acompañante'],
+        'Plato frecuente': ['Ensalada', 'Snack', 'Jugo', 'Postre', 'Sopa', 'Principal'],
+        'Temperatura de consumo': ['Frío', 'Ambiente', 'Caliente'],
+        'Parte comestible': ['Pulpa', 'Tallo', 'Hoja', 'Grano', 'Raíz', 'Semilla', 'Líquido'],
+        'Conservación': ['Ambiente', 'Refrigerar'],
+        'Vida útil': ['Corta', 'Media', 'Larga'],
+        'Estacionalidad': ['Estacional', 'Todo el año'],
+        'Sensibilidad al golpe': ['Alta', 'Media', 'Baja'],
+        'Facilidad de limpieza/pelado': ['Alta', 'Media'],
+        'Contenido de agua': ['Alto', 'Medio', 'Bajo'],
+        'Fibra': ['Alta', 'Media', 'Baja'],
+        'Grasas': ['Altas', 'Medias', 'Bajas'],
+        'Procesamiento': ['Mínimo', 'Medio', 'Alto'],
+        'Piel comestible': ['Sí', 'No']
+    };
+    
+    initializeGame();
+}
+
+// Función para inicializar el juego
+function initializeGame() {
+    console.log('=== INICIALIZANDO JUEGO ===');
+    createNeuralNetwork();
+    setupEventListeners();
+    resetGame();
+    console.log('=== JUEGO INICIALIZADO CORRECTAMENTE ===');
+}
 
 // Función para crear la red neuronal
 function createNeuralNetwork() {
@@ -76,9 +117,13 @@ function createNeuralNetwork() {
             neuronDiv.id = `neuron-${layer}-${neuron}`;
             neuronDiv.textContent = `N${neuron}`;
             
+            // Hacer las neuronas clickeables para activación manual
+            neuronDiv.style.cursor = 'pointer';
+            neuronDiv.addEventListener('click', () => activateNeuron(layer, neuron));
+            
             const tooltip = document.createElement('div');
             tooltip.className = 'neuron-tooltip';
-            tooltip.textContent = 'Inactiva';
+            tooltip.textContent = 'Clic para activar';
             neuronDiv.appendChild(tooltip);
 
             layerDiv.appendChild(neuronDiv);
@@ -92,6 +137,52 @@ function createNeuralNetwork() {
     console.log('Neuronas creadas:', neurons.length);
     console.log('Neuronas inactivas:', document.querySelectorAll('.neuron.inactive').length);
     console.log('=== RED NEURONAL CREADA ===');
+}
+
+// Función para activar neurona manualmente
+function activateNeuron(layer, neuron) {
+    console.log('=== ACTIVANDO NEURONA MANUALMENTE ===');
+    console.log('Capa:', layer, 'Neurona:', neuron);
+    
+    const neuronElement = document.getElementById(`neuron-${layer}-${neuron}`);
+    if (!neuronElement || !neuronElement.classList.contains('inactive')) {
+        console.log('Neurona no disponible para activar');
+        return;
+    }
+    
+    // Verificar que no se haya activado una neurona de esta capa en esta época
+    const neuronsInThisLayer = activeNeurons.filter(n => n.layer === layer && n.epoch === currentEpoch);
+    if (neuronsInThisLayer.length > 0) {
+        console.log('Ya se activó una neurona en esta capa en esta época');
+        return;
+    }
+    
+    // Seleccionar característica aleatoria disponible
+    const availableCharacteristics = Object.keys(characteristics);
+    const usedCharacteristics = activeNeurons.map(n => n.characteristic);
+    const remainingCharacteristics = availableCharacteristics.filter(c => !usedCharacteristics.includes(c));
+    
+    if (remainingCharacteristics.length === 0) {
+        console.log('No hay características disponibles');
+        return;
+    }
+    
+    const characteristic = remainingCharacteristics[Math.floor(Math.random() * remainingCharacteristics.length)];
+    const possibleValues = characteristics[characteristic];
+    const value = possibleValues[Math.floor(Math.random() * possibleValues.length)];
+    
+    // Activar la neurona
+    neuronElement.className = neuronElement.className.replace('inactive', 'active');
+    const tooltip = neuronElement.querySelector('.neuron-tooltip');
+    if (tooltip) tooltip.textContent = `${characteristic}: ${value}`;
+    
+    activeNeurons.push({ layer, neuron, characteristic, value, epoch: currentEpoch });
+    console.log('Neurona activada:', { layer, neuron, characteristic, value, epoch: currentEpoch });
+    console.log('Total de neuronas activas:', activeNeurons.length);
+    
+    updateActiveCharacteristics();
+    updateCostFunction();
+    updateFilteredFoods();
 }
 
 // Función para configurar event listeners
@@ -151,7 +242,7 @@ function resetGame() {
     const filteredFoodsElement = document.getElementById('filtered-foods');
     
     if (currentEpochElement) currentEpochElement.textContent = '0';
-    if (activeCharacteristicsElement) activeCharacteristicsElement.innerHTML = '<p class="text-muted">Haz clic en "Siguiente Época" para activar neuronas</p>';
+    if (activeCharacteristicsElement) activeCharacteristicsElement.innerHTML = '<p class="text-muted">Haz clic en las neuronas para activarlas</p>';
     if (predictionInputElement) predictionInputElement.value = '';
     if (predictionResultElement) predictionResultElement.innerHTML = '';
     if (filteredFoodsElement) filteredFoodsElement.innerHTML = '<p class="text-muted">Los alimentos aparecerán aquí</p>';
@@ -175,7 +266,7 @@ function resetGame() {
         console.log(`Neurona ${index + 1} - Clases después:`, neuron.className);
         
         const tooltip = neuron.querySelector('.neuron-tooltip');
-        if (tooltip) tooltip.textContent = 'Inactiva';
+        if (tooltip) tooltip.textContent = 'Clic para activar';
         
         console.log(`Neurona ${index + 1} reiniciada como inactiva`);
     });
@@ -192,7 +283,7 @@ function resetGame() {
     });
     
     updateCostFunction();
-    console.log('Alimento objetivo:', targetFood.clase);
+    console.log('Alimento objetivo:', targetFood.Clase);
     console.log('=== JUEGO REINICIADO ===');
 }
 
@@ -210,49 +301,19 @@ function nextEpoch() {
     const currentEpochElement = document.getElementById('current-epoch');
     if (currentEpochElement) currentEpochElement.textContent = currentEpoch.toString();
     
-    activateRandomNeuron();
-    updateActiveCharacteristics();
-    updateCostFunction();
-    updateFilteredFoods();
+    // Verificar si se activó al menos una neurona por capa
+    const neuronsThisEpoch = activeNeurons.filter(n => n.epoch === currentEpoch - 1);
+    const layersActivated = [...new Set(neuronsThisEpoch.map(n => n.layer))];
+    
+    if (layersActivated.length < 4) {
+        console.log('No se activaron neuronas en todas las capas');
+        alert('Debes activar al menos una neurona en cada capa antes de continuar');
+        currentEpoch--; // Revertir el incremento
+        if (currentEpochElement) currentEpochElement.textContent = currentEpoch.toString();
+        return;
+    }
+    
     console.log('=== ÉPOCA COMPLETADA ===');
-}
-
-// Función para activar neurona aleatoria
-function activateRandomNeuron() {
-    console.log('=== ACTIVANDO NEURONA ALEATORIA ===');
-    const availableCharacteristics = Object.keys(characteristics);
-    const usedCharacteristics = activeNeurons.map(n => n.characteristic);
-    const remainingCharacteristics = availableCharacteristics.filter(c => !usedCharacteristics.includes(c));
-    
-    console.log('Características disponibles:', remainingCharacteristics.length);
-    
-    if (remainingCharacteristics.length === 0) {
-        console.log('No hay características disponibles');
-        return;
-    }
-    
-    const characteristic = remainingCharacteristics[Math.floor(Math.random() * remainingCharacteristics.length)];
-    const possibleValues = characteristics[characteristic];
-    const value = possibleValues[Math.floor(Math.random() * possibleValues.length)];
-    
-    const inactiveNeurons = document.querySelectorAll('.neuron.inactive');
-    console.log('Neuronas inactivas encontradas:', inactiveNeurons.length);
-    
-    if (inactiveNeurons.length === 0) {
-        console.log('No hay neuronas inactivas');
-        return;
-    }
-    
-    const randomNeuron = inactiveNeurons[Math.floor(Math.random() * inactiveNeurons.length)];
-    const [, layer, neuron] = randomNeuron.id.split('-').map(Number);
-    
-    randomNeuron.className = randomNeuron.className.replace('inactive', 'active');
-    const tooltip = randomNeuron.querySelector('.neuron-tooltip');
-    if (tooltip) tooltip.textContent = `${characteristic}: ${value}`;
-    
-    activeNeurons.push({ layer, neuron, characteristic, value });
-    console.log('Neurona activada:', { layer, neuron, characteristic, value });
-    console.log('Total de neuronas activas:', activeNeurons.length);
 }
 
 // Función para actualizar características activas
@@ -269,7 +330,7 @@ function updateActiveCharacteristics() {
     container.innerHTML = '';
     
     if (activeNeurons.length === 0) {
-        container.innerHTML = '<p class="text-muted">Haz clic en "Siguiente Época" para activar neuronas</p>';
+        container.innerHTML = '<p class="text-muted">Haz clic en las neuronas para activarlas</p>';
         console.log('No hay neuronas activas, mostrando mensaje por defecto');
         return;
     }
@@ -290,7 +351,7 @@ function updateActiveCharacteristics() {
         
         const label = document.createElement('div');
         label.className = 'characteristic-label';
-        label.textContent = `Neurona ${neuron.neuron} - Capa ${neuron.layer}`;
+        label.textContent = `Neurona ${neuron.neuron} - Capa ${neuron.layer} (Época ${neuron.epoch})`;
         label.style.fontWeight = 'bold';
         label.style.fontSize = '14px';
         label.style.marginBottom = '10px';
@@ -454,7 +515,7 @@ function updateFilteredFoods() {
     }
     
     container.innerHTML = filteredFoods.map(food => 
-        `<span class="food-item" onclick="selectFood('${food.clase}')">${food.clase}</span>`
+        `<span class="food-item" onclick="selectFood('${food.Clase}')">${food.Clase}</span>`
     ).join('');
 }
 
@@ -472,7 +533,7 @@ function makePrediction() {
     if (!predictionInput || !resultDiv) return;
     
     const prediction = predictionInput.value.trim().toLowerCase();
-    const target = targetFood.clase.toLowerCase();
+    const target = targetFood.Clase.toLowerCase();
     
     if (!prediction) {
         resultDiv.innerHTML = '<div class="alert alert-warning">Por favor, escribe tu predicción</div>';
@@ -481,7 +542,7 @@ function makePrediction() {
     
     if (prediction === target) {
         gameActive = false;
-        resultDiv.innerHTML = `<div class="prediction-correct">¡CORRECTO! Era ${targetFood.clase} 🎉</div>`;
+        resultDiv.innerHTML = `<div class="prediction-correct">¡CORRECTO! Era ${targetFood.Clase} 🎉</div>`;
         showVictoryModal();
     } else {
         resultDiv.innerHTML = `<div class="prediction-incorrect">Incorrecto. Sigue intentando... 🤔</div>`;
@@ -499,7 +560,7 @@ function showVictoryModal() {
     const victoryMessage = document.getElementById('victory-message');
     const victoryDetails = document.getElementById('victory-details');
     
-    if (victoryMessage) victoryMessage.textContent = `¡Adivinaste! Era ${targetFood.clase}`;
+    if (victoryMessage) victoryMessage.textContent = `¡Adivinaste! Era ${targetFood.Clase}`;
     if (victoryDetails) victoryDetails.textContent = `Lo lograste en ${currentEpoch} épocas con ${activeNeurons.length} características activadas.`;
     
     modal.show();
@@ -522,10 +583,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Actualizar timestamp
     updateTimestamp();
     
-    createNeuralNetwork();
-    setupEventListeners();
-    resetGame();
-    console.log('=== JUEGO INICIALIZADO CORRECTAMENTE ===');
+    // Cargar dataset desde CSV
+    loadDataset();
 });
 
 // Función global para reiniciar (llamada desde modal)
