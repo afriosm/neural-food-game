@@ -1,0 +1,61 @@
+﻿Clase,Color dominante,Forma,Piel/cáscara,Semillas/hueso,Jugosidad,Sabor dominante,Dulzor,Acidez,Textura,Aroma,Preparación típica,Consumo habitual,Plato frecuente,Temperatura de consumo,Parte comestible,Conservación,Vida útil,Estacionalidad,Sensibilidad al golpe,Facilidad de limpieza/pelado,Contenido de agua,Fibra,Grasas,Procesamiento,Piel comestible
+Mango,Naranja,Ovalado,Gruesa,Muchas pequeñas,Media,Dulce,Alto,Alta,Harinoso,Alto,Crudo,En mezcla,Ensalada,Frío,Pulpa,Ambiente,Corta,Estacional,Alta,Alta,Alto,Alta,Bajas,Mínimo,No
+Papaya,Morado,Ovalado,Gruesa,Sin,Media,Dulce,Alto,Media,Fibroso,Alto,Crudo,Solo,Snack,Ambiente,Pulpa,Refrigerar,Corta,Estacional,Media,Media,Alto,Alta,Bajas,Mínimo,No
+Piña,Amarillo,Alargado,Gruesa,Hueso,Media,Ácido,Alto,Alta,Harinoso,Alto,Crudo,Solo,Ensalada,Frío,Pulpa,Refrigerar,Corta,Todo el año,Media,Alta,Alto,Media,Bajas,Mínimo,No
+Lulo,Amarillo,Ovalado,Gruesa,Pequeñas,Media,Dulce,Alto,Baja,Fibroso,Alto,Crudo,En mezcla,Snack,Frío,Pulpa,Refrigerar,Corta,Todo el año,Media,Alta,Alto,Media,Bajas,Mínimo,Sí
+Guanábana,Verde,Alargado,Gruesa,Pequeñas,Alta,Ácido,Medio,Baja,Harinoso,Medio,Crudo,En mezcla,Postre,Frío,Pulpa,Refrigerar,Corta,Todo el año,Alta,Media,Alto,Media,Bajas,Mínimo,No
+Maracuyá,Morado,Ovalado,Fina,Muchas pequeñas,Media,Dulce,Alto,Media,Fibroso,Alto,Crudo,Solo,Postre,Ambiente,Pulpa,Refrigerar,Corta,Todo el año,Alta,Alta,Alto,Media,Bajas,Mínimo,Sí
+Banano,Amarillo,Ovalado,Gruesa,Pequeñas,Media,Dulce,Alto,Alta,Harinoso,Medio,Crudo,Solo,Jugo,Ambiente,Pulpa,Ambiente,Corta,Todo el año,Media,Media,Alto,Media,Bajas,Mínimo,Sí
+Manzana,Verde,Alargado,Gruesa,Sin,Media,Dulce,Medio,Media,Harinoso,Alto,Crudo,En mezcla,Snack,Frío,Pulpa,Ambiente,Corta,Estacional,Alta,Media,Alto,Alta,Bajas,Mínimo,Sí
+Pera,Naranja,Redondo,Fina,Pequeñas,Alta,Ácido,Alto,Media,Harinoso,Medio,Crudo,Solo,Postre,Ambiente,Pulpa,Refrigerar,Corta,Estacional,Alta,Media,Alto,Media,Bajas,Mínimo,Sí
+Uva,Morado,Alargado,Gruesa,Muchas pequeñas,Alta,Dulce,Alto,Media,Harinoso,Medio,Crudo,En mezcla,Jugo,Frío,Pulpa,Ambiente,Corta,Estacional,Alta,Media,Alto,Alta,Bajas,Mínimo,No
+Fresa,Morado,Ovalado,Gruesa,Pequeñas,Media,Ácido,Alto,Media,Fibroso,Alto,Crudo,Acompañante,Jugo,Ambiente,Pulpa,Ambiente,Corta,Todo el año,Media,Media,Alto,Media,Bajas,Mínimo,No
+Mora,Morado,Alargado,Fina,Pequeñas,Media,Ácido,Medio,Baja,Harinoso,Medio,Crudo,Acompañante,Snack,Ambiente,Pulpa,Refrigerar,Corta,Todo el año,Alta,Media,Alto,Alta,Bajas,Mínimo,Sí
+Arándano,Naranja,Ovalado,Gruesa,Muchas pequeñas,Alta,Ácido,Medio,Media,Harinoso,Alto,Crudo,En mezcla,Jugo,Ambiente,Pulpa,Ambiente,Corta,Todo el año,Alta,Media,Alto,Alta,Bajas,Mínimo,No
+Cereza,Rojo,Redondo,Fina,Pequeñas,Alta,Dulce,Medio,Alta,Jugoso,Alto,Crudo,Solo,Snack,Ambiente,Pulpa,Ambiente,Corta,Todo el año,Alta,Media,Alto,Alta,Bajas,Mínimo,Sí
+Sandía,Amarillo,Alargado,Fina,Hueso,Alta,Ácido,Alto,Media,Fibroso,Medio,Crudo,Acompañante,Postre,Ambiente,Pulpa,Refrigerar,Corta,Estacional,Alta,Media,Alto,Alta,Bajas,Mínimo,Sí
+Melón,Verde,Ovalado,Gruesa,Muchas pequeñas,Media,Dulce,Alto,Media,Jugoso,Alto,Crudo,En mezcla,Snack,Ambiente,Pulpa,Ambiente,Corta,Todo el año,Alta,Alta,Alto,Media,Bajas,Mínimo,No
+Naranja,Rojo,Redondo,Fina,Hueso,Alta,Dulce,Medio,Baja,Jugoso,Alto,Crudo,Solo,Snack,Frío,Pulpa,Ambiente,Corta,Todo el año,Alta,Media,Alto,Alta,Bajas,Mínimo,No
+Mandarina,Morado,Redondo,Fina,Pequeñas,Media,Ácido,Medio,Media,Harinoso,Alto,Crudo,Solo,Snack,Ambiente,Pulpa,Refrigerar,Corta,Estacional,Media,Media,Alto,Alta,Bajas,Mínimo,Sí
+Limón,Morado,Redondo,Gruesa,Pequeñas,Alta,Dulce,Medio,Media,Harinoso,Medio,Crudo,Solo,Ensalada,Ambiente,Pulpa,Ambiente,Corta,Estacional,Alta,Alta,Alto,Media,Bajas,Mínimo,No
+Guayaba,Verde,Alargado,Fina,Pequeñas,Media,Dulce,Medio,Alta,Fibroso,Alto,Crudo,Solo,Postre,Frío,Pulpa,Ambiente,Corta,Estacional,Alta,Alta,Alto,Alta,Bajas,Mínimo,No
+Tomate de árbol,Naranja,Ovalado,Gruesa,Hueso,Alta,Dulce,Alto,Alta,Fibroso,Alto,Crudo,En mezcla,Snack,Frío,Pulpa,Refrigerar,Corta,Todo el año,Media,Media,Alto,Alta,Bajas,Mínimo,No
+Tomate,Amarillo,Ovalado,Gruesa,Hueso,Media,Dulce,Medio,Alta,Jugoso,Medio,Crudo,Acompañante,Snack,Ambiente,Pulpa,Refrigerar,Corta,Todo el año,Alta,Media,Alto,Alta,Bajas,Mínimo,Sí
+Aguacate,Morado,Redondo,Gruesa,Sin,Media,Ácido,Medio,Alta,Harinoso,Medio,Crudo,En mezcla,Jugo,Frío,Pulpa,Ambiente,Corta,Estacional,Media,Alta,Alto,Alta,Altas,Mínimo,No
+Cebolla,Café,Irregular,Fina,Sin,Baja,Dulce,Medio,Baja,Harinoso,Bajo,Crudo,Acompañante,Ensalada,Frío,Tallo,Ambiente,Corta,Estacional,Alta,Alta,Medio,Alta,Bajas,Mínimo,No
+Zanahoria,Naranja,Redondo,Gruesa,Sin,Baja,Umami,Bajo,Baja,Harinoso,Bajo,Crudo,Solo,Snack,Ambiente,Pulpa,Refrigerar,Corta,Estacional,Alta,Alta,Alto,Alta,Bajas,Mínimo,No
+Papa,Blanco,Redondo,Fina,Sin,Media,Umami,Medio,Baja,Harinoso,Medio,Cocido,Acompañante,Sopa,Caliente,Raíz,Ambiente,Larga,Todo el año,Media,Media,Bajo,Alta,Bajas,Medio,No
+Yuca,Naranja,Irregular,Fina,Sin,Media,Dulce,Bajo,Media,Harinoso,Bajo,Cocido,Acompañante,Sopa,Caliente,Raíz,Ambiente,Larga,Todo el año,Media,Media,Bajo,Media,Bajas,Medio,No
+Arracacha,Naranja,Redondo,Fina,Sin,Baja,Dulce,Bajo,Baja,Harinoso,Bajo,Cocido,En mezcla,Snack,Caliente,Raíz,Ambiente,Larga,Todo el año,Media,Media,Bajo,Media,Bajas,Medio,No
+Batata,Blanco,Irregular,Fina,Sin,Baja,Dulce,Medio,Baja,Harinoso,Medio,Cocido,En mezcla,Principal,Caliente,Grano,Ambiente,Larga,Todo el año,Media,Media,Bajo,Media,Bajas,Medio,No
+Ahuyama,Café,Irregular,Gruesa,Sin,Media,Umami,Medio,Media,Harinoso,Bajo,Crudo,Acompañante,Ensalada,Ambiente,Tallo,Ambiente,Corta,Todo el año,Media,Alta,Medio,Alta,Bajas,Mínimo,Sí
+Pepino,Verde,Irregular,Gruesa,Sin,Media,Umami,Bajo,Baja,Crujiente,Bajo,Crudo,Solo,Jugo,Frío,Hoja,Ambiente,Corta,Todo el año,Alta,Alta,Medio,Alta,Bajas,Mínimo,No
+Pimentón,Café,Redondo,Fina,Sin,Media,Umami,Bajo,Media,Fibroso,Medio,Crudo,Solo,Ensalada,Frío,Hoja,Refrigerar,Corta,Todo el año,Media,Media,Medio,Alta,Bajas,Mínimo,Sí
+Fríjol,Amarillo,Redondo,Fina,Semilla,Baja,Dulce,Bajo,Baja,Cremoso,Bajo,Cocido,En mezcla,Sopa,Caliente,Grano,Ambiente,Larga,Todo el año,Baja,Alta,Bajo,Media,Bajas,Medio,No
+Lenteja,Verde,Redondo,Fina,Semilla,Baja,Umami,Bajo,Baja,Cremoso,Bajo,Cocido,En mezcla,Sopa,Caliente,Grano,Ambiente,Larga,Todo el año,Baja,Alta,Bajo,Media,Bajas,Medio,No
+Garbanzo,Café,Ovalado,Fina,Semilla,Baja,Dulce,Bajo,Baja,Cremoso,Bajo,Cocido,En mezcla,Principal,Caliente,Semilla,Ambiente,Larga,Todo el año,Baja,Alta,Bajo,Alta,Bajas,Medio,No
+Arveja,Amarillo,Ovalado,Fina,Semilla,Baja,Umami,Bajo,Baja,Cremoso,Bajo,Cocido,Acompañante,Sopa,Caliente,Semilla,Ambiente,Larga,Todo el año,Baja,Alta,Bajo,Alta,Bajas,Medio,No
+Maíz,Verde,Alargado,Fina,Semilla,Baja,Umami,Bajo,Baja,Harinoso,Bajo,Cocido,En mezcla,Sopa,Caliente,Grano,Ambiente,Larga,Todo el año,Baja,Alta,Bajo,Media,Bajas,Medio,No
+Arroz,Blanco,Alargado,Fina,Semilla,Baja,Umami,Bajo,Baja,Harinoso,Bajo,Cocido,Acompañante,Sopa,Caliente,Raíz,Ambiente,Larga,Todo el año,Baja,Alta,Bajo,Media,Bajas,Medio,No
+Avena,Blanco,Alargado,Fina,Semilla,Baja,Dulce,Bajo,Baja,Harinoso,Bajo,Cocido,Acompañante,Snack,Caliente,Semilla,Ambiente,Larga,Todo el año,Baja,Alta,Bajo,Media,Bajas,Medio,No
+Trigo,Verde,Alargado,Fina,Semilla,Baja,Umami,Bajo,Baja,Harinoso,Bajo,Cocido,En mezcla,Ensalada,Caliente,Semilla,Ambiente,Larga,Todo el año,Baja,Alta,Bajo,Alta,Bajas,Medio,No
+Café,Blanco,Plano,Sin piel,Sin,Alta,Dulce,Alto,Baja,Jugoso,Bajo,Ambos,Solo,Snack,Caliente,Líquido,Refrigerar,Larga,Todo el año,Baja,Alta,Alto,Baja,Bajas,Mínimo,No
+Chocolate,Blanco,Plano,Sin piel,Sin,Alta,Ácido,Medio,Media,Jugoso,Medio,Ambos,Solo,Snack,Caliente,Líquido,Ambiente,Media,Todo el año,Baja,Alta,Alto,Baja,Bajas,Alto,No
+Jugo de naranja,Amarillo,Plano,Sin piel,Sin,Alta,Ácido,Medio,Baja,Jugoso,Medio,Ambos,Solo,Jugo,Caliente,Líquido,Ambiente,Media,Todo el año,Baja,Alta,Alto,Baja,Bajas,Alto,No
+Jugo de lulo,Café,Plano,Sin piel,Sin,Alta,Dulce,Bajo,Baja,Cremoso,Medio,Ambos,Solo,Jugo,Frío,Líquido,Refrigerar,Larga,Todo el año,Baja,Alta,Alto,Baja,Bajas,Medio,No
+Jugo de mango,Verde,Plano,Sin piel,Sin,Alta,Umami,Bajo,Media,Jugoso,Alto,Ambos,Solo,Jugo,Caliente,Líquido,Ambiente,Media,Todo el año,Baja,Alta,Alto,Baja,Bajas,Medio,No
+Agua,Verde,Plano,Sin piel,Sin,Alta,Dulce,Medio,Media,Cremoso,Medio,Ambos,Solo,Snack,Caliente,Líquido,Ambiente,Media,Todo el año,Baja,Alta,Alto,Baja,Bajas,Mínimo,No
+Té,Café,Plano,Sin piel,Sin,Alta,Umami,Bajo,Alta,Jugoso,Bajo,Ambos,Solo,Snack,Frío,Líquido,Refrigerar,Media,Todo el año,Baja,Alta,Alto,Baja,Bajas,Mínimo,No
+Leche,Verde,Plano,Sin piel,Sin,Alta,Ácido,Bajo,Alta,Cremoso,Alto,Ambos,Solo,Snack,Ambiente,Líquido,Refrigerar,Larga,Todo el año,Baja,Alta,Medio,Baja,Medias,Mínimo,No
+Yogur,Café,Plano,Sin piel,Sin,Alta,Umami,Alto,Baja,Jugoso,Bajo,Ambos,Solo,Postre,Caliente,Líquido,Refrigerar,Media,Todo el año,Baja,Alta,Medio,Baja,Altas,Alto,No
+Queso,Amarillo,Plano,Sin piel,Sin,Alta,Ácido,Alto,Alta,Cremoso,Bajo,Ambos,Solo,Snack,Ambiente,Líquido,Refrigerar,Media,Todo el año,Baja,Alta,Alto,Baja,Bajas,Alto,No
+Huevo,Café,Plano,Sin piel,Sin,Baja,Umami,Alto,Media,Harinoso,Alto,Cocido,Acompañante,Ensalada,Ambiente,Líquido,Ambiente,Media,Todo el año,Baja,Alta,Alto,Baja,Bajas,Medio,No
+Arepa,Verde,Alargado,Sin piel,Sin,Baja,Dulce,Alto,Baja,Harinoso,Alto,Cocido,Solo,Principal,Ambiente,Pulpa,Refrigerar,Media,Todo el año,Media,Alta,Alto,Media,Bajas,Medio,No
+Pan,Verde,Plano,Sin piel,Sin,Baja,Dulce,Alto,Baja,Fibroso,Medio,Cocido,Solo,Ensalada,Ambiente,Pulpa,Refrigerar,Media,Todo el año,Baja,Media,Alto,Media,Medias,Medio,No
+Empanada,Café,Redondo,Sin piel,Sin,Baja,Umami,Bajo,Baja,Cremoso,Medio,Cocido,Solo,Ensalada,Caliente,Líquido,Ambiente,Media,Todo el año,Media,Alta,Alto,Media,Bajas,Alto,No
+Sopa de verduras,Amarillo,Alargado,Sin piel,Sin,Baja,Umami,Bajo,Baja,Harinoso,Medio,Cocido,Acompañante,Sopa,Ambiente,Líquido,Refrigerar,Media,Todo el año,Baja,Media,Medio,Media,Bajas,Alto,No
+Ensalada,Rojo,Irregular,Sin piel,Sin,Baja,Salado,Bajo,Baja,Crujiente,Bajo,Cocido,Solo,Snack,Caliente,Semilla,Ambiente,Media,Todo el año,Baja,Media,Medio,Baja,Bajas,Alto,No
+Cereal,Amarillo,Alargado,Fina,Semilla,Baja,Umami,Bajo,Baja,Cremoso,Bajo,Cocido,Acompañante,Principal,Caliente,Semilla,Ambiente,Larga,Todo el año,Baja,Alta,Bajo,Alta,Bajas,Medio,No
+Miel,Amarillo,Irregular,Sin piel,Sin,Baja,Salado,Bajo,Baja,Harinoso,Bajo,Cocido,Acompañante,Postre,Caliente,Semilla,Refrigerar,Media,Todo el año,Baja,Media,Alto,Baja,Medias,Medio,No
+Aceite,Amarillo,Plano,Sin piel,Sin,Baja,Umami,Alto,Baja,Harinoso,Alto,Cocido,Solo,Postre,Caliente,Semilla,Ambiente,Media,Todo el año,Media,Alta,Alto,Baja,Altas,Medio,No
+Aguardiente sin azúcar,Verde,Plano,Sin piel,Sin,Alta,Dulce,Medio,Baja,Jugoso,Alto,Ambos,Solo,Snack,Caliente,Líquido,Refrigerar,Larga,Todo el año,Baja,Alta,Alto,Baja,Bajas,Mínimo,No
