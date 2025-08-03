@@ -13,7 +13,7 @@ let characteristics = {};
 function loadDataset() {
     console.log('=== CARGANDO DATASET ===');
     
-    Papa.parse('Dataset_ampliado__4____296_clases___25_rasgos.csv', {
+    Papa.parse('dataset_alimentos_480plus_25rasgos.csv', {
         download: true,
         header: true,
         complete: function(results) {

@@ -90,7 +90,7 @@ Luego activar Pages como en la Opción 1.
 
 ## 📊 Dataset
 
-El juego usa un dataset de **296 alimentos colombianos** con **25 características** cada uno:
+El juego usa un dataset de **480+ alimentos colombianos** con **25 características** cada uno:
 
 - **Físicas**: Color, forma, piel, semillas, textura
 - **Sensoriales**: Sabor, dulzor, acidez, aroma, jugosidad  
