@@ -156,12 +156,23 @@ function resetGame() {
     if (predictionResultElement) predictionResultElement.innerHTML = '';
     if (filteredFoodsElement) filteredFoodsElement.innerHTML = '<p class="text-muted">Los alimentos aparecerán aquí</p>';
     
+    // Reiniciar todas las neuronas como inactivas
     const neurons = document.querySelectorAll('.neuron');
-    neurons.forEach(neuron => {
-        neuron.className = neuron.className.replace('active', 'inactive');
+    console.log('Reiniciando neuronas:', neurons.length);
+    neurons.forEach((neuron, index) => {
+        // Remover todas las clases de estado y agregar inactive
+        neuron.className = neuron.className.replace('active', '').replace('inactive', '');
+        neuron.classList.add('inactive');
+        
         const tooltip = neuron.querySelector('.neuron-tooltip');
         if (tooltip) tooltip.textContent = 'Inactiva';
+        
+        console.log(`Neurona ${index + 1} reiniciada como inactiva`);
     });
+    
+    // Verificar que se reiniciaron correctamente
+    const inactiveNeurons = document.querySelectorAll('.neuron.inactive');
+    console.log('Neuronas inactivas después del reset:', inactiveNeurons.length);
     
     updateCostFunction();
     console.log('Alimento objetivo:', targetFood.clase);
