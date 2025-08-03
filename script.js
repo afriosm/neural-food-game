@@ -8,6 +8,7 @@ let targetFood = null;
 let gameActive = false;
 let dataset = [];
 let characteristics = {};
+let selectedNeuron = null;
 
 // Función para cargar el dataset desde CSV
 function loadDataset() {
@@ -87,6 +88,7 @@ function initializeGame() {
     console.log('=== INICIALIZANDO JUEGO ===');
     createNeuralNetwork();
     setupEventListeners();
+    setupModalEventListeners();
     resetGame();
     console.log('=== JUEGO INICIALIZADO CORRECTAMENTE ===');
 }
@@ -117,9 +119,9 @@ function createNeuralNetwork() {
             neuronDiv.id = `neuron-${layer}-${neuron}`;
             neuronDiv.textContent = `N${neuron}`;
             
-            // Hacer las neuronas clickeables para activación manual
+            // Hacer las neuronas clickeables para activación modal
             neuronDiv.style.cursor = 'pointer';
-            neuronDiv.addEventListener('click', () => activateNeuron(layer, neuron));
+            neuronDiv.addEventListener('click', () => openNeuronActivationModal(layer, neuron));
             
             const tooltip = document.createElement('div');
             tooltip.className = 'neuron-tooltip';
@@ -139,9 +141,9 @@ function createNeuralNetwork() {
     console.log('=== RED NEURONAL CREADA ===');
 }
 
-// Función para activar neurona manualmente
-function activateNeuron(layer, neuron) {
-    console.log('=== ACTIVANDO NEURONA MANUALMENTE ===');
+// Función para abrir modal de activación de neurona
+function openNeuronActivationModal(layer, neuron) {
+    console.log('=== ABRIENDO MODAL DE ACTIVACIÓN ===');
     console.log('Capa:', layer, 'Neurona:', neuron);
     
     const neuronElement = document.getElementById(`neuron-${layer}-${neuron}`);
@@ -154,24 +156,98 @@ function activateNeuron(layer, neuron) {
     const neuronsInThisLayer = activeNeurons.filter(n => n.layer === layer && n.epoch === currentEpoch);
     if (neuronsInThisLayer.length > 0) {
         console.log('Ya se activó una neurona en esta capa en esta época');
+        alert('Ya se activó una neurona en esta capa en esta época');
         return;
     }
     
-    // Seleccionar característica aleatoria disponible
+    selectedNeuron = { layer, neuron };
+    
+    // Llenar dropdown de características
+    const characteristicSelect = document.getElementById('characteristic-select');
+    characteristicSelect.innerHTML = '<option value="">Elige una característica...</option>';
+    
     const availableCharacteristics = Object.keys(characteristics);
     const usedCharacteristics = activeNeurons.map(n => n.characteristic);
     const remainingCharacteristics = availableCharacteristics.filter(c => !usedCharacteristics.includes(c));
     
-    if (remainingCharacteristics.length === 0) {
-        console.log('No hay características disponibles');
-        return;
+    remainingCharacteristics.forEach(char => {
+        const option = document.createElement('option');
+        option.value = char;
+        option.textContent = char;
+        characteristicSelect.appendChild(option);
+    });
+    
+    // Limpiar dropdown de valores
+    const valueSelect = document.getElementById('value-select');
+    valueSelect.innerHTML = '<option value="">Primero elige una característica...</option>';
+    
+    // Abrir modal
+    const modal = new bootstrap.Modal(document.getElementById('neuron-activation-modal'));
+    modal.show();
+}
+
+// Función para configurar event listeners del modal
+function setupModalEventListeners() {
+    const characteristicSelect = document.getElementById('characteristic-select');
+    const valueSelect = document.getElementById('value-select');
+    const activateBtn = document.getElementById('activate-neuron-btn');
+    
+    if (characteristicSelect) {
+        characteristicSelect.addEventListener('change', function() {
+            const selectedCharacteristic = this.value;
+            if (selectedCharacteristic) {
+                // Llenar dropdown de valores
+                valueSelect.innerHTML = '<option value="">Elige un valor...</option>';
+                characteristics[selectedCharacteristic].forEach(val => {
+                    const option = document.createElement('option');
+                    option.value = val;
+                    option.textContent = val;
+                    valueSelect.appendChild(option);
+                });
+            } else {
+                valueSelect.innerHTML = '<option value="">Primero elige una característica...</option>';
+            }
+            updateActivateButton();
+        });
     }
     
-    const characteristic = remainingCharacteristics[Math.floor(Math.random() * remainingCharacteristics.length)];
-    const possibleValues = characteristics[characteristic];
-    const value = possibleValues[Math.floor(Math.random() * possibleValues.length)];
+    if (valueSelect) {
+        valueSelect.addEventListener('change', updateActivateButton);
+    }
+    
+    if (activateBtn) {
+        activateBtn.addEventListener('click', activateSelectedNeuron);
+    }
+}
+
+// Función para actualizar estado del botón de activar
+function updateActivateButton() {
+    const characteristicSelect = document.getElementById('characteristic-select');
+    const valueSelect = document.getElementById('value-select');
+    const activateBtn = document.getElementById('activate-neuron-btn');
+    
+    if (activateBtn) {
+        const canActivate = characteristicSelect.value && valueSelect.value;
+        activateBtn.disabled = !canActivate;
+    }
+}
+
+// Función para activar la neurona seleccionada
+function activateSelectedNeuron() {
+    if (!selectedNeuron) return;
+    
+    const characteristicSelect = document.getElementById('characteristic-select');
+    const valueSelect = document.getElementById('value-select');
+    
+    const characteristic = characteristicSelect.value;
+    const value = valueSelect.value;
+    
+    if (!characteristic || !value) return;
     
     // Activar la neurona
+    const { layer, neuron } = selectedNeuron;
+    const neuronElement = document.getElementById(`neuron-${layer}-${neuron}`);
+    
     neuronElement.className = neuronElement.className.replace('inactive', 'active');
     const tooltip = neuronElement.querySelector('.neuron-tooltip');
     if (tooltip) tooltip.textContent = `${characteristic}: ${value}`;
@@ -180,7 +256,14 @@ function activateNeuron(layer, neuron) {
     console.log('Neurona activada:', { layer, neuron, characteristic, value, epoch: currentEpoch });
     console.log('Total de neuronas activas:', activeNeurons.length);
     
-    updateActiveCharacteristics();
+    // Cerrar modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('neuron-activation-modal'));
+    modal.hide();
+    
+    // Limpiar selección
+    selectedNeuron = null;
+    
+    updateActiveNeuronsInfo();
     updateCostFunction();
     updateFilteredFoods();
 }
@@ -236,13 +319,13 @@ function resetGame() {
     targetFood = dataset[Math.floor(Math.random() * dataset.length)];
     
     const currentEpochElement = document.getElementById('current-epoch');
-    const activeCharacteristicsElement = document.getElementById('active-characteristics');
+    const activeNeuronsInfoElement = document.getElementById('active-neurons-info');
     const predictionInputElement = document.getElementById('prediction-input');
     const predictionResultElement = document.getElementById('prediction-result');
     const filteredFoodsElement = document.getElementById('filtered-foods');
     
     if (currentEpochElement) currentEpochElement.textContent = '0';
-    if (activeCharacteristicsElement) activeCharacteristicsElement.innerHTML = '<p class="text-muted">Haz clic en las neuronas para activarlas</p>';
+    if (activeNeuronsInfoElement) activeNeuronsInfoElement.innerHTML = '<p class="text-muted">Haz clic en las neuronas para activarlas</p>';
     if (predictionInputElement) predictionInputElement.value = '';
     if (predictionResultElement) predictionResultElement.innerHTML = '';
     if (filteredFoodsElement) filteredFoodsElement.innerHTML = '<p class="text-muted">Los alimentos aparecerán aquí</p>';
@@ -316,14 +399,14 @@ function nextEpoch() {
     console.log('=== ÉPOCA COMPLETADA ===');
 }
 
-// Función para actualizar características activas
-function updateActiveCharacteristics() {
-    console.log('=== ACTUALIZANDO CARACTERÍSTICAS ACTIVAS ===');
+// Función para actualizar información de neuronas activas
+function updateActiveNeuronsInfo() {
+    console.log('=== ACTUALIZANDO INFORMACIÓN DE NEURONAS ACTIVAS ===');
     console.log('Neuronas activas:', activeNeurons.length);
     
-    const container = document.getElementById('active-characteristics');
+    const container = document.getElementById('active-neurons-info');
     if (!container) {
-        console.error('No se encontró el contenedor de características activas');
+        console.error('No se encontró el contenedor de información de neuronas activas');
         return;
     }
     
@@ -335,139 +418,30 @@ function updateActiveCharacteristics() {
         return;
     }
     
-    console.log('Creando dropdowns para', activeNeurons.length, 'neuronas');
+    console.log('Creando información para', activeNeurons.length, 'neuronas');
     
     activeNeurons.forEach((neuron, index) => {
-        console.log('Creando dropdowns para neurona:', index, neuron);
+        console.log('Creando información para neurona:', index, neuron);
         
         const div = document.createElement('div');
-        div.className = 'characteristic-dropdown';
-        div.style.border = '3px solid #ff0000';
-        div.style.padding = '15px';
-        div.style.margin = '15px 0';
-        div.style.borderRadius = '10px';
-        div.style.backgroundColor = '#fff3cd';
-        div.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+        div.className = 'neuron-info-item';
         
-        const label = document.createElement('div');
-        label.className = 'characteristic-label';
-        label.textContent = `Neurona ${neuron.neuron} - Capa ${neuron.layer} (Época ${neuron.epoch})`;
-        label.style.fontWeight = 'bold';
-        label.style.fontSize = '14px';
-        label.style.marginBottom = '10px';
-        label.style.color = '#007bff';
+        const header = document.createElement('div');
+        header.className = 'neuron-info-header';
+        header.textContent = `Neurona ${neuron.neuron} - Capa ${neuron.layer} (Época ${neuron.epoch})`;
         
-        // Dropdown para seleccionar característica
-        const characteristicSelect = document.createElement('select');
-        characteristicSelect.className = 'form-select form-select-sm mb-2';
-        characteristicSelect.id = `char-select-${index}`;
-        characteristicSelect.style.marginBottom = '10px';
-        characteristicSelect.style.border = '2px solid #007bff';
+        const details = document.createElement('div');
+        details.className = 'neuron-info-details';
+        details.textContent = `${neuron.characteristic}: ${neuron.value}`;
         
-        Object.keys(characteristics).forEach(char => {
-            const option = document.createElement('option');
-            option.value = char;
-            option.textContent = char;
-            if (char === neuron.characteristic) {
-                option.selected = true;
-            }
-            characteristicSelect.appendChild(option);
-        });
-        
-        // Dropdown para seleccionar valor
-        const valueSelect = document.createElement('select');
-        valueSelect.className = 'form-select form-select-sm';
-        valueSelect.id = `value-select-${index}`;
-        valueSelect.style.border = '2px solid #28a745';
-        
-        characteristics[neuron.characteristic].forEach(val => {
-            const option = document.createElement('option');
-            option.value = val;
-            option.textContent = val;
-            if (val === neuron.value) {
-                option.selected = true;
-            }
-            valueSelect.appendChild(option);
-        });
-        
-        // Event listeners
-        characteristicSelect.onchange = (e) => {
-            const newCharacteristic = e.target.value;
-            updateNeuronCharacteristic(index, newCharacteristic);
-        };
-        
-        valueSelect.onchange = (e) => {
-            const newValue = e.target.value;
-            updateNeuronValue(index, newValue);
-        };
-        
-        div.appendChild(label);
-        div.appendChild(characteristicSelect);
-        div.appendChild(valueSelect);
+        div.appendChild(header);
+        div.appendChild(details);
         container.appendChild(div);
         
-        console.log('Dropdowns creados para neurona:', index);
+        console.log('Información creada para neurona:', index);
     });
     
-    console.log('=== CARACTERÍSTICAS ACTIVAS ACTUALIZADAS ===');
-}
-
-// Función para actualizar valor de neurona
-function updateNeuronValue(neuronIndex, newValue) {
-    console.log('Updating neuron value:', neuronIndex, newValue);
-    
-    if (neuronIndex >= 0 && neuronIndex < activeNeurons.length) {
-        activeNeurons[neuronIndex].value = newValue;
-        
-        const neuron = activeNeurons[neuronIndex];
-        const neuronElement = document.getElementById(`neuron-${neuron.layer}-${neuron.neuron}`);
-        if (neuronElement) {
-            const tooltip = neuronElement.querySelector('.neuron-tooltip');
-            if (tooltip) {
-                tooltip.textContent = `${neuron.characteristic}: ${newValue}`;
-            }
-        }
-        
-        updateCostFunction();
-        updateFilteredFoods();
-    }
-}
-
-// Función para actualizar característica de neurona
-function updateNeuronCharacteristic(neuronIndex, newCharacteristic) {
-    console.log('Updating neuron characteristic:', neuronIndex, newCharacteristic);
-    
-    if (neuronIndex >= 0 && neuronIndex < activeNeurons.length) {
-        activeNeurons[neuronIndex].characteristic = newCharacteristic;
-        
-        // Actualizar el dropdown de valores
-        const valueSelect = document.getElementById(`value-select-${neuronIndex}`);
-        if (valueSelect) {
-            valueSelect.innerHTML = '';
-            characteristics[newCharacteristic].forEach(val => {
-                const option = document.createElement('option');
-                option.value = val;
-                option.textContent = val;
-                valueSelect.appendChild(option);
-            });
-            // Seleccionar el primer valor por defecto
-            activeNeurons[neuronIndex].value = characteristics[newCharacteristic][0];
-            valueSelect.value = characteristics[newCharacteristic][0];
-        }
-        
-        // Actualizar tooltip
-        const neuron = activeNeurons[neuronIndex];
-        const neuronElement = document.getElementById(`neuron-${neuron.layer}-${neuron.neuron}`);
-        if (neuronElement) {
-            const tooltip = neuronElement.querySelector('.neuron-tooltip');
-            if (tooltip) {
-                tooltip.textContent = `${newCharacteristic}: ${activeNeurons[neuronIndex].value}`;
-            }
-        }
-        
-        updateCostFunction();
-        updateFilteredFoods();
-    }
+    console.log('=== INFORMACIÓN DE NEURONAS ACTIVAS ACTUALIZADA ===');
 }
 
 // Función para obtener alimentos filtrados
