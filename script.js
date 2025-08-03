@@ -1,5 +1,5 @@
 // Neural Food Network - Juego Educativo
-console.log('Script cargado correctamente');
+console.log('=== SCRIPT CARGADO ===');
 
 // Variables globales
 let currentEpoch = 0;
@@ -52,8 +52,13 @@ const dataset = [
 
 // Función para crear la red neuronal
 function createNeuralNetwork() {
-    console.log('Creando red neuronal...');
+    console.log('=== CREANDO RED NEURONAL ===');
     const networkContainer = document.getElementById('neural-network');
+    if (!networkContainer) {
+        console.error('No se encontró el contenedor de la red neuronal');
+        return;
+    }
+    
     networkContainer.innerHTML = '';
 
     for (let layer = 1; layer <= 4; layer++) {
@@ -81,100 +86,162 @@ function createNeuralNetwork() {
         
         networkContainer.appendChild(layerDiv);
     }
-    console.log('Red neuronal creada');
+    console.log('=== RED NEURONAL CREADA ===');
 }
 
 // Función para configurar event listeners
 function setupEventListeners() {
-    console.log('Configurando event listeners...');
+    console.log('=== CONFIGURANDO EVENT LISTENERS ===');
     
-    document.getElementById('next-epoch-btn').addEventListener('click', nextEpoch);
-    document.getElementById('reset-btn').addEventListener('click', resetGame);
-    document.getElementById('predict-btn').addEventListener('click', makePrediction);
+    const nextEpochBtn = document.getElementById('next-epoch-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const predictBtn = document.getElementById('predict-btn');
     
-    document.getElementById('prediction-input').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            makePrediction();
-        }
-    });
+    if (nextEpochBtn) {
+        nextEpochBtn.addEventListener('click', nextEpoch);
+        console.log('Event listener agregado para next-epoch-btn');
+    } else {
+        console.error('No se encontró next-epoch-btn');
+    }
     
-    console.log('Event listeners configurados');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', resetGame);
+        console.log('Event listener agregado para reset-btn');
+    } else {
+        console.error('No se encontró reset-btn');
+    }
+    
+    if (predictBtn) {
+        predictBtn.addEventListener('click', makePrediction);
+        console.log('Event listener agregado para predict-btn');
+    } else {
+        console.error('No se encontró predict-btn');
+    }
+    
+    const predictionInput = document.getElementById('prediction-input');
+    if (predictionInput) {
+        predictionInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                makePrediction();
+            }
+        });
+        console.log('Event listener agregado para prediction-input');
+    }
+    
+    console.log('=== EVENT LISTENERS CONFIGURADOS ===');
 }
 
 // Función para reiniciar el juego
 function resetGame() {
-    console.log('Reiniciando juego...');
+    console.log('=== REINICIANDO JUEGO ===');
     currentEpoch = 0;
     activeNeurons = [];
     gameActive = true;
     targetFood = dataset[Math.floor(Math.random() * dataset.length)];
     
-    document.getElementById('current-epoch').textContent = '0';
-    document.getElementById('active-characteristics').innerHTML = '<p class="text-muted">Haz clic en "Siguiente Época" para activar neuronas</p>';
-    document.getElementById('prediction-input').value = '';
-    document.getElementById('prediction-result').innerHTML = '';
-    document.getElementById('filtered-foods').innerHTML = '<p class="text-muted">Los alimentos aparecerán aquí conforme se activen las neuronas</p>';
+    const currentEpochElement = document.getElementById('current-epoch');
+    const activeCharacteristicsElement = document.getElementById('active-characteristics');
+    const predictionInputElement = document.getElementById('prediction-input');
+    const predictionResultElement = document.getElementById('prediction-result');
+    const filteredFoodsElement = document.getElementById('filtered-foods');
+    
+    if (currentEpochElement) currentEpochElement.textContent = '0';
+    if (activeCharacteristicsElement) activeCharacteristicsElement.innerHTML = '<p class="text-muted">Haz clic en "Siguiente Época" para activar neuronas</p>';
+    if (predictionInputElement) predictionInputElement.value = '';
+    if (predictionResultElement) predictionResultElement.innerHTML = '';
+    if (filteredFoodsElement) filteredFoodsElement.innerHTML = '<p class="text-muted">Los alimentos aparecerán aquí</p>';
     
     const neurons = document.querySelectorAll('.neuron');
     neurons.forEach(neuron => {
         neuron.className = neuron.className.replace('active', 'inactive');
-        neuron.querySelector('.neuron-tooltip').textContent = 'Inactiva';
+        const tooltip = neuron.querySelector('.neuron-tooltip');
+        if (tooltip) tooltip.textContent = 'Inactiva';
     });
     
     updateCostFunction();
     console.log('Alimento objetivo:', targetFood.clase);
+    console.log('=== JUEGO REINICIADO ===');
 }
 
 // Función para siguiente época
 function nextEpoch() {
-    console.log('Siguiente época...');
-    if (!gameActive || currentEpoch >= 16) return;
+    console.log('=== SIGUIENTE ÉPOCA ===');
+    if (!gameActive || currentEpoch >= 16) {
+        console.log('Juego no activo o máximo de épocas alcanzado');
+        return;
+    }
     
     currentEpoch++;
-    document.getElementById('current-epoch').textContent = currentEpoch.toString();
+    console.log('Época actual:', currentEpoch);
+    
+    const currentEpochElement = document.getElementById('current-epoch');
+    if (currentEpochElement) currentEpochElement.textContent = currentEpoch.toString();
     
     activateRandomNeuron();
     updateActiveCharacteristics();
     updateCostFunction();
     updateFilteredFoods();
+    console.log('=== ÉPOCA COMPLETADA ===');
 }
 
 // Función para activar neurona aleatoria
 function activateRandomNeuron() {
-    console.log('Activando neurona aleatoria...');
+    console.log('=== ACTIVANDO NEURONA ALEATORIA ===');
     const availableCharacteristics = Object.keys(characteristics);
     const usedCharacteristics = activeNeurons.map(n => n.characteristic);
     const remainingCharacteristics = availableCharacteristics.filter(c => !usedCharacteristics.includes(c));
     
-    if (remainingCharacteristics.length === 0) return;
+    console.log('Características disponibles:', remainingCharacteristics.length);
+    
+    if (remainingCharacteristics.length === 0) {
+        console.log('No hay características disponibles');
+        return;
+    }
     
     const characteristic = remainingCharacteristics[Math.floor(Math.random() * remainingCharacteristics.length)];
     const possibleValues = characteristics[characteristic];
     const value = possibleValues[Math.floor(Math.random() * possibleValues.length)];
     
     const inactiveNeurons = document.querySelectorAll('.neuron.inactive');
-    if (inactiveNeurons.length === 0) return;
+    console.log('Neuronas inactivas encontradas:', inactiveNeurons.length);
+    
+    if (inactiveNeurons.length === 0) {
+        console.log('No hay neuronas inactivas');
+        return;
+    }
     
     const randomNeuron = inactiveNeurons[Math.floor(Math.random() * inactiveNeurons.length)];
     const [, layer, neuron] = randomNeuron.id.split('-').map(Number);
     
     randomNeuron.className = randomNeuron.className.replace('inactive', 'active');
-    randomNeuron.querySelector('.neuron-tooltip').textContent = `${characteristic}: ${value}`;
+    const tooltip = randomNeuron.querySelector('.neuron-tooltip');
+    if (tooltip) tooltip.textContent = `${characteristic}: ${value}`;
     
     activeNeurons.push({ layer, neuron, characteristic, value });
     console.log('Neurona activada:', { layer, neuron, characteristic, value });
+    console.log('Total de neuronas activas:', activeNeurons.length);
 }
 
 // Función para actualizar características activas
 function updateActiveCharacteristics() {
-    console.log('Actualizando características activas. Neuronas activas:', activeNeurons.length);
+    console.log('=== ACTUALIZANDO CARACTERÍSTICAS ACTIVAS ===');
+    console.log('Neuronas activas:', activeNeurons.length);
+    
     const container = document.getElementById('active-characteristics');
+    if (!container) {
+        console.error('No se encontró el contenedor de características activas');
+        return;
+    }
+    
     container.innerHTML = '';
     
     if (activeNeurons.length === 0) {
         container.innerHTML = '<p class="text-muted">Haz clic en "Siguiente Época" para activar neuronas</p>';
+        console.log('No hay neuronas activas, mostrando mensaje por defecto');
         return;
     }
+    
+    console.log('Creando dropdowns para', activeNeurons.length, 'neuronas');
     
     activeNeurons.forEach((neuron, index) => {
         console.log('Creando dropdowns para neurona:', index, neuron);
@@ -185,7 +252,8 @@ function updateActiveCharacteristics() {
         div.style.padding = '15px';
         div.style.margin = '15px 0';
         div.style.borderRadius = '10px';
-        div.style.backgroundColor = '#f8f9fa';
+        div.style.backgroundColor = '#fff3cd';
+        div.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
         
         const label = document.createElement('div');
         label.className = 'characteristic-label';
@@ -247,7 +315,7 @@ function updateActiveCharacteristics() {
         console.log('Dropdowns creados para neurona:', index);
     });
     
-    console.log('Características activas actualizadas');
+    console.log('=== CARACTERÍSTICAS ACTIVAS ACTUALIZADAS ===');
 }
 
 // Función para actualizar valor de neurona
@@ -323,16 +391,20 @@ function updateCostFunction() {
     const count = filteredFoods.length;
     const percentage = (count / dataset.length) * 100;
     
-    document.getElementById('possible-count').textContent = count.toString();
-    document.getElementById('cost-progress').style.width = `${percentage}%`;
+    const possibleCountElement = document.getElementById('possible-count');
+    const costProgressElement = document.getElementById('cost-progress');
     
-    const progressBar = document.getElementById('cost-progress');
-    if (percentage > 50) {
-        progressBar.className = 'progress-bar bg-danger';
-    } else if (percentage > 20) {
-        progressBar.className = 'progress-bar bg-warning';
-    } else {
-        progressBar.className = 'progress-bar bg-success';
+    if (possibleCountElement) possibleCountElement.textContent = count.toString();
+    if (costProgressElement) costProgressElement.style.width = `${percentage}%`;
+    
+    if (costProgressElement) {
+        if (percentage > 50) {
+            costProgressElement.className = 'progress-bar bg-danger';
+        } else if (percentage > 20) {
+            costProgressElement.className = 'progress-bar bg-warning';
+        } else {
+            costProgressElement.className = 'progress-bar bg-success';
+        }
     }
 }
 
@@ -340,6 +412,8 @@ function updateCostFunction() {
 function updateFilteredFoods() {
     const filteredFoods = getFilteredFoods();
     const container = document.getElementById('filtered-foods');
+    
+    if (!container) return;
     
     if (filteredFoods.length === 0) {
         container.innerHTML = '<p class="text-danger">No hay alimentos que cumplan estas características</p>';
@@ -353,14 +427,19 @@ function updateFilteredFoods() {
 
 // Función para seleccionar alimento
 function selectFood(foodName) {
-    document.getElementById('prediction-input').value = foodName;
+    const predictionInput = document.getElementById('prediction-input');
+    if (predictionInput) predictionInput.value = foodName;
 }
 
 // Función para hacer predicción
 function makePrediction() {
-    const prediction = document.getElementById('prediction-input').value.trim().toLowerCase();
-    const target = targetFood.clase.toLowerCase();
+    const predictionInput = document.getElementById('prediction-input');
     const resultDiv = document.getElementById('prediction-result');
+    
+    if (!predictionInput || !resultDiv) return;
+    
+    const prediction = predictionInput.value.trim().toLowerCase();
+    const target = targetFood.clase.toLowerCase();
     
     if (!prediction) {
         resultDiv.innerHTML = '<div class="alert alert-warning">Por favor, escribe tu predicción</div>';
@@ -376,7 +455,7 @@ function makePrediction() {
         
         setTimeout(() => {
             resultDiv.innerHTML = '';
-            document.getElementById('prediction-input').value = '';
+            predictionInput.value = '';
         }, 2000);
     }
 }
@@ -384,18 +463,22 @@ function makePrediction() {
 // Función para mostrar modal de victoria
 function showVictoryModal() {
     const modal = new bootstrap.Modal(document.getElementById('victory-modal'));
-    document.getElementById('victory-message').textContent = `¡Adivinaste! Era ${targetFood.clase}`;
-    document.getElementById('victory-details').textContent = `Lo lograste en ${currentEpoch} épocas con ${activeNeurons.length} características activadas.`;
+    const victoryMessage = document.getElementById('victory-message');
+    const victoryDetails = document.getElementById('victory-details');
+    
+    if (victoryMessage) victoryMessage.textContent = `¡Adivinaste! Era ${targetFood.clase}`;
+    if (victoryDetails) victoryDetails.textContent = `Lo lograste en ${currentEpoch} épocas con ${activeNeurons.length} características activadas.`;
+    
     modal.show();
 }
 
 // Inicialización cuando se carga la página
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM cargado, inicializando juego...');
+    console.log('=== DOM CARGADO - INICIALIZANDO JUEGO ===');
     createNeuralNetwork();
     setupEventListeners();
     resetGame();
-    console.log('Juego inicializado correctamente');
+    console.log('=== JUEGO INICIALIZADO CORRECTAMENTE ===');
 });
 
 // Función global para reiniciar (llamada desde modal)
