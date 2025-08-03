@@ -158,11 +158,14 @@ class NeuralFoodNetwork {
         randomNeuron.querySelector('.neuron-tooltip').textContent = `${characteristic}: ${value}`;
         
         this.activeNeurons.push({ layer, neuron, characteristic, value });
+        console.log('Neurona activada:', { layer, neuron, characteristic, value });
     }
 
     updateActiveCharacteristics() {
         const container = document.getElementById('active-characteristics');
         container.innerHTML = '';
+        
+        console.log('Actualizando características activas. Neuronas activas:', this.activeNeurons.length);
         
         if (this.activeNeurons.length === 0) {
             container.innerHTML = '<p class="text-muted">Haz clic en "Siguiente Época" para activar neuronas</p>';
@@ -170,17 +173,26 @@ class NeuralFoodNetwork {
         }
         
         this.activeNeurons.forEach((neuron, index) => {
+            console.log('Creando dropdowns para neurona:', index, neuron);
+            
             const div = document.createElement('div');
             div.className = 'characteristic-dropdown';
+            div.style.border = '2px solid #007bff';
+            div.style.padding = '10px';
+            div.style.margin = '10px 0';
+            div.style.borderRadius = '8px';
             
             const label = document.createElement('div');
             label.className = 'characteristic-label';
             label.textContent = `Neurona ${neuron.neuron} - Capa ${neuron.layer}`;
+            label.style.fontWeight = 'bold';
+            label.style.marginBottom = '5px';
             
             // Dropdown para seleccionar característica
             const characteristicSelect = document.createElement('select');
             characteristicSelect.className = 'form-select form-select-sm mb-2';
             characteristicSelect.id = `char-select-${index}`;
+            characteristicSelect.style.marginBottom = '5px';
             
             Object.keys(this.characteristics).forEach(char => {
                 const option = document.createElement('option');
@@ -222,7 +234,11 @@ class NeuralFoodNetwork {
             div.appendChild(characteristicSelect);
             div.appendChild(valueSelect);
             container.appendChild(div);
+            
+            console.log('Dropdowns creados para neurona:', index);
         });
+        
+        console.log('Características activas actualizadas');
     }
 
     updateNeuronValue(neuronIndex, newValue) {
@@ -362,7 +378,9 @@ let game;
 
 // Inicializar cuando se carga la página
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Inicializando Neural Food Network...');
     game = new NeuralFoodNetwork();
+    console.log('Juego inicializado:', game);
 });
 
 // Función global para reiniciar
