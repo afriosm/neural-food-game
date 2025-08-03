@@ -177,8 +177,25 @@ class NeuralFoodNetwork {
             label.className = 'characteristic-label';
             label.textContent = `Neurona ${neuron.neuron} - Capa ${neuron.layer}`;
             
-            const select = document.createElement('select');
-            select.className = 'form-select form-select-sm';
+            // Dropdown para seleccionar característica
+            const characteristicSelect = document.createElement('select');
+            characteristicSelect.className = 'form-select form-select-sm mb-2';
+            characteristicSelect.id = `char-select-${index}`;
+            
+            Object.keys(this.characteristics).forEach(char => {
+                const option = document.createElement('option');
+                option.value = char;
+                option.textContent = char;
+                if (char === neuron.characteristic) {
+                    option.selected = true;
+                }
+                characteristicSelect.appendChild(option);
+            });
+            
+            // Dropdown para seleccionar valor
+            const valueSelect = document.createElement('select');
+            valueSelect.className = 'form-select form-select-sm';
+            valueSelect.id = `value-select-${index}`;
             
             this.characteristics[neuron.characteristic].forEach(val => {
                 const option = document.createElement('option');
@@ -187,22 +204,23 @@ class NeuralFoodNetwork {
                 if (val === neuron.value) {
                     option.selected = true;
                 }
-                select.appendChild(option);
+                valueSelect.appendChild(option);
             });
             
-            // Event listener simple y directo
-            select.onchange = (e) => {
-                console.log('Dropdown changed:', index, e.target.value);
-                this.updateNeuronValue(index, e.target.value);
+            // Event listeners
+            characteristicSelect.onchange = (e) => {
+                const newCharacteristic = e.target.value;
+                this.updateNeuronCharacteristic(index, newCharacteristic);
             };
             
-            const small = document.createElement('small');
-            small.className = 'text-muted';
-            small.textContent = neuron.characteristic;
+            valueSelect.onchange = (e) => {
+                const newValue = e.target.value;
+                this.updateNeuronValue(index, newValue);
+            };
             
             div.appendChild(label);
-            div.appendChild(select);
-            div.appendChild(small);
+            div.appendChild(characteristicSelect);
+            div.appendChild(valueSelect);
             container.appendChild(div);
         });
     }
@@ -219,6 +237,42 @@ class NeuralFoodNetwork {
                 const tooltip = neuronElement.querySelector('.neuron-tooltip');
                 if (tooltip) {
                     tooltip.textContent = `${neuron.characteristic}: ${newValue}`;
+                }
+            }
+            
+            this.updateCostFunction();
+            this.updateFilteredFoods();
+        }
+    }
+
+    updateNeuronCharacteristic(neuronIndex, newCharacteristic) {
+        console.log('Updating neuron characteristic:', neuronIndex, newCharacteristic);
+        
+        if (neuronIndex >= 0 && neuronIndex < this.activeNeurons.length) {
+            this.activeNeurons[neuronIndex].characteristic = newCharacteristic;
+            
+            // Actualizar el dropdown de valores
+            const valueSelect = document.getElementById(`value-select-${neuronIndex}`);
+            if (valueSelect) {
+                valueSelect.innerHTML = '';
+                this.characteristics[newCharacteristic].forEach(val => {
+                    const option = document.createElement('option');
+                    option.value = val;
+                    option.textContent = val;
+                    valueSelect.appendChild(option);
+                });
+                // Seleccionar el primer valor por defecto
+                this.activeNeurons[neuronIndex].value = this.characteristics[newCharacteristic][0];
+                valueSelect.value = this.characteristics[newCharacteristic][0];
+            }
+            
+            // Actualizar tooltip
+            const neuron = this.activeNeurons[neuronIndex];
+            const neuronElement = document.getElementById(`neuron-${neuron.layer}-${neuron.neuron}`);
+            if (neuronElement) {
+                const tooltip = neuronElement.querySelector('.neuron-tooltip');
+                if (tooltip) {
+                    tooltip.textContent = `${newCharacteristic}: ${this.activeNeurons[neuronIndex].value}`;
                 }
             }
             
