@@ -1,7 +1,7 @@
 // Neural Food Network - Juego Educativo
 class NeuralFoodNetwork {
     constructor() {
-        // Definir características y sus posibles valores
+        // Características disponibles
         this.characteristics = {
             'Color dominante': ['Naranja', 'Morado', 'Amarillo', 'Verde', 'Rojo', 'Blanco', 'Café'],
             'Forma': ['Ovalado', 'Alargado', 'Redondo', 'Irregular', 'Plano'],
@@ -46,7 +46,6 @@ class NeuralFoodNetwork {
 
         // Variables del juego
         this.currentEpoch = 0;
-        this.maxEpochs = 16;
         this.activeNeurons = [];
         this.targetFood = null;
         this.gameActive = false;
@@ -126,7 +125,7 @@ class NeuralFoodNetwork {
     }
 
     nextEpoch() {
-        if (!this.gameActive || this.currentEpoch >= this.maxEpochs) return;
+        if (!this.gameActive || this.currentEpoch >= 16) return;
         
         this.currentEpoch++;
         document.getElementById('current-epoch').textContent = this.currentEpoch.toString();
@@ -177,22 +176,26 @@ class NeuralFoodNetwork {
             
             const div = document.createElement('div');
             div.className = 'characteristic-dropdown';
-            div.style.border = '2px solid #007bff';
-            div.style.padding = '10px';
-            div.style.margin = '10px 0';
-            div.style.borderRadius = '8px';
+            div.style.border = '3px solid #ff0000';
+            div.style.padding = '15px';
+            div.style.margin = '15px 0';
+            div.style.borderRadius = '10px';
+            div.style.backgroundColor = '#f8f9fa';
             
             const label = document.createElement('div');
             label.className = 'characteristic-label';
             label.textContent = `Neurona ${neuron.neuron} - Capa ${neuron.layer}`;
             label.style.fontWeight = 'bold';
-            label.style.marginBottom = '5px';
+            label.style.fontSize = '14px';
+            label.style.marginBottom = '10px';
+            label.style.color = '#007bff';
             
             // Dropdown para seleccionar característica
             const characteristicSelect = document.createElement('select');
             characteristicSelect.className = 'form-select form-select-sm mb-2';
             characteristicSelect.id = `char-select-${index}`;
-            characteristicSelect.style.marginBottom = '5px';
+            characteristicSelect.style.marginBottom = '10px';
+            characteristicSelect.style.border = '2px solid #007bff';
             
             Object.keys(this.characteristics).forEach(char => {
                 const option = document.createElement('option');
@@ -208,6 +211,7 @@ class NeuralFoodNetwork {
             const valueSelect = document.createElement('select');
             valueSelect.className = 'form-select form-select-sm';
             valueSelect.id = `value-select-${index}`;
+            valueSelect.style.border = '2px solid #28a745';
             
             this.characteristics[neuron.characteristic].forEach(val => {
                 const option = document.createElement('option');
