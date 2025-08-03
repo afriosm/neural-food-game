@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Food Network - Juego Educativo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <header class="text-center mb-4">
+            <h1 class="display-4 text-primary">🧠 Neural Food Network</h1>
+            <p class="lead">Aprende cómo funciona una Red Neuronal adivinando alimentos</p>
+        </header>
+
+        <div class="row">
+            <!-- Panel de Control -->
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5><i class="fas fa-cogs"></i> Panel de Control</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Información de Época -->
+                        <div class="mb-3">
+                            <h6>Época Actual: <span id="current-epoch" class="badge bg-info">0</span></h6>
+                        </div>
+
+                        <!-- Dropdowns para características -->
+                        <div class="mb-3">
+                            <h6>Características Activas:</h6>
+                            <div id="active-characteristics">
+                                <p class="text-muted">Haz clic en "Siguiente Época" para activar neuronas</p>
+                            </div>
+                        </div>
+
+                        <!-- Función de Costo -->
+                        <div class="mb-3">
+                            <h6>Función de Costo (Alimentos Posibles):</h6>
+                            <div class="progress">
+                                <div id="cost-progress" class="progress-bar bg-warning" role="progressbar" style="width: 100%">
+                                    <span id="possible-count">60</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Controles del Juego -->
+                        <div class="d-grid gap-2">
+                            <button id="next-epoch-btn" class="btn btn-success">
+                                <i class="fas fa-forward"></i> Siguiente Época
+                            </button>
+                            <button id="reset-btn" class="btn btn-secondary">
+                                <i class="fas fa-refresh"></i> Reiniciar Juego
+                            </button>
+                        </div>
+
+                        <!-- Área de Predicción -->
+                        <div class="mt-4">
+                            <h6>Hacer Predicción:</h6>
+                            <div class="input-group mb-2">
+                                <input type="text" id="prediction-input" class="form-control" placeholder="Escribe el alimento...">
+                                <button id="predict-btn" class="btn btn-outline-primary">Predecir</button>
+                            </div>
+                            <div id="prediction-result"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Red Neuronal Visual -->
+            <div class="col-md-8">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5><i class="fas fa-project-diagram"></i> Red Neuronal Visual</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="neural-network" class="neural-network-container">
+                            <!-- Las capas se generarán dinámicamente con JavaScript -->
+                        </div>
+                        
+                        <!-- Alimentos Filtrados -->
+                        <div class="mt-4">
+                            <h6>Alimentos que Cumplen las Características:</h6>
+                            <div id="filtered-foods" class="filtered-foods-container">
+                                <p class="text-muted">Los alimentos aparecerán aquí conforme se activen las neuronas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Victoria -->
+        <div class="modal fade" id="victory-modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title">🎉 ¡Felicitaciones!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <h3 id="victory-message"></h3>
+                        <p id="victory-details"></p>
+                        <div class="victory-confetti">🎊 🎉 🥳 🎊 🎉</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="resetGame()">Jugar de Nuevo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
