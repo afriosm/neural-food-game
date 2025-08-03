@@ -505,9 +505,23 @@ function showVictoryModal() {
     modal.show();
 }
 
+// Función para actualizar timestamp
+function updateTimestamp() {
+    const now = new Date();
+    const timestamp = now.toLocaleString('es-ES');
+    const timestampElement = document.getElementById('last-update');
+    if (timestampElement) {
+        timestampElement.textContent = timestamp;
+    }
+}
+
 // Inicialización cuando se carga la página
 document.addEventListener('DOMContentLoaded', () => {
     console.log('=== DOM CARGADO - INICIALIZANDO JUEGO ===');
+    
+    // Actualizar timestamp
+    updateTimestamp();
+    
     createNeuralNetwork();
     setupEventListeners();
     resetGame();
