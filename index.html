@@ -15,77 +15,77 @@
             <p class="lead">Aprende cómo funciona una Red Neuronal adivinando alimentos</p>
         </header>
 
-        <div class="row">
-            <!-- Panel de Control -->
-            <div class="col-md-4">
-                <div class="card h-100">
+        <!-- Panel de Control Simplificado -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
                     <div class="card-header bg-primary text-white">
                         <h5><i class="fas fa-cogs"></i> Panel de Control</h5>
                     </div>
                     <div class="card-body">
-                        <!-- Información de Época -->
-                        <div class="mb-3">
-                            <h6>Época Actual: <span id="current-epoch" class="badge bg-info">0</span></h6>
-                        </div>
-
-                        <!-- Dropdowns para características -->
-                        <div class="mb-3">
-                            <h6>Características Activas:</h6>
-                            <div id="active-characteristics">
-                                <p class="text-muted">Haz clic en "Siguiente Época" para activar neuronas</p>
-                            </div>
-                        </div>
-
-                        <!-- Función de Costo -->
-                        <div class="mb-3">
-                            <h6>Función de Costo (Alimentos Posibles):</h6>
-                            <div class="progress">
-                                <div id="cost-progress" class="progress-bar bg-warning" role="progressbar" style="width: 100%">
-                                    <span id="possible-count">60</span>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h6>Época Actual: <span id="current-epoch" class="badge bg-info">0</span></h6>
+                                <div class="d-grid gap-2">
+                                    <button id="next-epoch-btn" class="btn btn-success">
+                                        <i class="fas fa-forward"></i> Siguiente Época
+                                    </button>
+                                    <button id="reset-btn" class="btn btn-secondary">
+                                        <i class="fas fa-refresh"></i> Reiniciar Juego
+                                    </button>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Controles del Juego -->
-                        <div class="d-grid gap-2">
-                            <button id="next-epoch-btn" class="btn btn-success">
-                                <i class="fas fa-forward"></i> Siguiente Época
-                            </button>
-                            <button id="reset-btn" class="btn btn-secondary">
-                                <i class="fas fa-refresh"></i> Reiniciar Juego
-                            </button>
-                        </div>
-
-                        <!-- Área de Predicción -->
-                        <div class="mt-4">
-                            <h6>Hacer Predicción:</h6>
-                            <div class="input-group mb-2">
-                                <input type="text" id="prediction-input" class="form-control" placeholder="Escribe el alimento...">
-                                <button id="predict-btn" class="btn btn-outline-primary">Predecir</button>
+                            <div class="col-md-3">
+                                <h6>Función de Costo:</h6>
+                                <div class="progress mb-2">
+                                    <div id="cost-progress" class="progress-bar bg-warning" role="progressbar" style="width: 100%">
+                                        <span id="possible-count">10</span>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" id="prediction-input" class="form-control" placeholder="Escribe el alimento...">
+                                    <button id="predict-btn" class="btn btn-outline-primary">Predecir</button>
+                                </div>
+                                <div id="prediction-result" class="mt-2"></div>
                             </div>
-                            <div id="prediction-result"></div>
+                            <div class="col-md-6">
+                                <h6>Alimentos Posibles:</h6>
+                                <div id="filtered-foods" class="filtered-foods-container" style="max-height: 100px; overflow-y: auto;">
+                                    <p class="text-muted">Los alimentos aparecerán aquí</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Red Neuronal Visual -->
-            <div class="col-md-8">
-                <div class="card h-100">
+        <!-- Red Neuronal Visual -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
                     <div class="card-header bg-success text-white">
                         <h5><i class="fas fa-project-diagram"></i> Red Neuronal Visual</h5>
                     </div>
                     <div class="card-body">
                         <div id="neural-network" class="neural-network-container">
-                            <!-- Las capas se generarán dinámicamente con JavaScript -->
+                            <!-- Las capas se generarán dinámicamente -->
                         </div>
-                        
-                        <!-- Alimentos Filtrados -->
-                        <div class="mt-4">
-                            <h6>Alimentos que Cumplen las Características:</h6>
-                            <div id="filtered-foods" class="filtered-foods-container">
-                                <p class="text-muted">Los alimentos aparecerán aquí conforme se activen las neuronas</p>
-                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Características Activas - NUEVO DISEÑO -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5><i class="fas fa-sliders-h"></i> Características Activas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="active-characteristics">
+                            <p class="text-muted">Haz clic en "Siguiente Época" para activar neuronas</p>
                         </div>
                     </div>
                 </div>
