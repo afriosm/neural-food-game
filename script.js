@@ -14,7 +14,7 @@ let selectedNeuron = null;
 function loadDataset() {
     console.log('=== CARGANDO DATASET ===');
     
-    Papa.parse('dataset_alimentos_480plus_25rasgos.csv', {
+    Papa.parse('dataset_alimentos_475clases_25rasgos.csv', {
         download: true,
         header: true,
         complete: function(results) {
